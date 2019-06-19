@@ -11,7 +11,7 @@ class Attendance < ApplicationRecord
   end
   
   def integrity_started_to_finished
-    if finished_at < started_at
+    if finished_at.present? && finished_at < started_at
       errors.add(:finished_at, ":退社時間より出社時間の方が遅い時間が入力されています。")
     end
   end
