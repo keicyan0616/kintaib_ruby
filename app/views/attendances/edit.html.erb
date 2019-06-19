@@ -15,18 +15,33 @@
       </thead>
       <tbody>
         <% @dates.each do |day| %>
+          <% 
+            css_class = 
+            case %w{日 月 火 水 木 金 土}[day.worked_on.wday]
+            when '土'
+              'txtSaturday'
+            when '日'
+              'txtSunday'
+            end
+          %>
           <%= fields_for "attendances[]", day do |af| %>
             <tr>
               <td><%= day.worked_on.to_s(:date) %></td>
-              <td><%= %w{日 月 火 水 木 金 土}[day.worked_on.wday] %></td>
-              <td><%= af.time_field :started_at, class: "form-control" %></td>
-              <td><%= af.time_field :finished_at, class: "form-control" %></td>
+              <td class="<%= css_class %>"><%= %w{日 月 火 水 木 金 土}[day.worked_on.wday] %></td>
+              <!--時間入力不可制御フラグの設定-->
+              <% if day.worked_on > Date.today %>
+                <% readOnlyFlg = true %>
+              <% else %>
+                <% readOnlyFlg = false %>
+              <% end %>
+              <td><%= af.time_field :started_at, class: "form-control", readonly: readOnlyFlg %></td>
+              <td><%= af.time_field :finished_at, class: "form-control", readonly: readOnlyFlg %></td>
               <td>
                 <% if day.started_at.present? && day.finished_at.present? %>
                   <%= working_times(day.started_at, day.finished_at) %>
                 <% end %>
               </td>
-              <td><%= af.text_field :note, class: "form-control" %></td>
+              <td><%= af.text_field :note, class: "form-control", readonly: readOnlyFlg %></td>
             </tr>
           <% end %>
         <% end %>

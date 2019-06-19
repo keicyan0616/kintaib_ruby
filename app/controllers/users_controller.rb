@@ -1,7 +1,8 @@
 class UsersController < ApplicationController
-  before_action :logged_in_user, only: [:index, :edit, :update]
+  before_action :logged_in_user, only: [:edit, :update]
   before_action :correct_user,   only: [:edit, :update]
-  before_action :admin_user,     only: [:destroy, :edit_basic_info, :update_basic_info]
+  before_action :admin_user,     only: [:index, :destroy, :edit_basic_info, :update_basic_info]
+  before_action :correct_or_admin_user,   only: [:show]
   
   def index
     @users = User.paginate(page: params[:page])
@@ -60,13 +61,17 @@ class UsersController < ApplicationController
 
   def update_basic_info
     @user = User.find(params[:id])
-    if @user.update_attributes(basic_info_params)
-      flash[:success] = "基本情報を更新しました。"
-      redirect_to @user   
-    else
-      render 'edit_basic_info'
+    @users = User.all
+    
+    @users.each do |user1|
+      if !user1.update_attributes(basic_info_params)
+        render 'edit_basic_info'
+      end
     end
+    flash[:success] = "基本情報を更新しました。"
+    redirect_to @user   
   end
+
 
 private
 
@@ -96,5 +101,11 @@ private
     
     def admin_user
       redirect_to(root_url) unless current_user.admin?
+    end
+    
+    # 正しいユーザー、または、管理者ユーザーかどうか確認
+    def correct_or_admin_user
+      @user = User.find(params[:id])
+      redirect_to(root_url) unless current_user?(@user) or current_user.admin?
     end
 end

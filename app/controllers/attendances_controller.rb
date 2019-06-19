@@ -1,4 +1,5 @@
 class AttendancesController < ApplicationController
+  before_action :correct_or_admin_user,   only: [:edit]
 
   def create
     @user = User.find(params[:user_id])
@@ -41,5 +42,10 @@ class AttendancesController < ApplicationController
     def attendances_params
       params.permit(attendances: [:started_at, :finished_at, :note])[:attendances]
     end
-
+    
+    # 正しいユーザー、または、管理者ユーザーかどうか確認
+    def correct_or_admin_user
+      @user = User.find(params[:id])
+      redirect_to(root_url) unless current_user?(@user) or current_user.admin?
+    end
 end

@@ -1,3 +1,5 @@
+# coding: utf-8
+
 User.create!(name:  "管理者",
              email: "email@sample.com",
              password:              "password",
@@ -5,7 +7,8 @@ User.create!(name:  "管理者",
              admin: true)
 
 59.times do |n|
-  name  = Faker::Name.name
+  #name  = Faker::Name.name
+  name  = Gimei.name.kanji
   email = "email#{n+1}@sample.com"
   password = "password"
   User.create!(name:  name,
