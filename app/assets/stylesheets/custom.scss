@@ -174,3 +174,16 @@ input, textarea, select, .uneditable-input {
   width: 387px;
   font-weight: bold;
 }
+
+/* ログイン画面 */
+.checkbox-login {
+  width: auto;
+  margin-left: 25px;
+  span {
+    font-weight: normal;
+  }
+}
+
+#remember-me{
+  margin-left: -280px;
+}
