@@ -59,14 +59,51 @@
           <td><%= day.worked_on.to_s(:date) %></td>
           <td class="<%= css_class %>"><%= %w{日 月 火 水 木 金 土}[day.worked_on.wday] %></td>
           <td><%= day.started_at.to_s(:hour) if day.started_at.present? %></td>
-          <td><%= day.started_at.to_s(:min) if day.started_at.present? %></td>
+          <td>
+            <% if day.started_at.present? %>
+              <% if day.started_at.to_s(:min).to_i >= 0 && day.started_at.to_s(:min).to_i <= 14 %>
+                <%= "00" %>
+                <% start_min = "00" %>
+              <% elsif day.started_at.to_s(:min).to_i >= 15 && day.started_at.to_s(:min).to_i <= 29 %>
+                <%= "15" %>
+                <% start_min = "15" %>
+              <% elsif day.started_at.to_s(:min).to_i >= 30 && day.started_at.to_s(:min).to_i <= 44 %>
+                <%= "30" %>
+                <% start_min = "30" %>
+              <% elsif day.started_at.to_s(:min).to_i >= 45 && day.started_at.to_s(:min).to_i <= 59 %>
+                <%= "45" %>
+                <% start_min = "45" %>
+              <% else %>
+                <%= day.started_at.to_s(:min) %>
+              <% end %>
+            <% end %>
+          </td>
           <td>
             <% if day.worked_on == Date.today && day.started_at.nil? %>
               <%= button_to "出社", user_attendances_path(@user), class: "btn btn-xs btn-primary" %>
             <% end %>
           </td>
           <td><%= day.finished_at.to_s(:hour) if day.finished_at.present? %></td>
-          <td><%= day.finished_at.to_s(:min) if day.finished_at.present? %></td>
+          <td>
+            <%#= day.finished_at.to_s(:min) if day.finished_at.present? %>
+            <% if day.finished_at.present? %>
+              <% if day.finished_at.to_s(:min).to_i >= 0 && day.finished_at.to_s(:min).to_i <= 14 %>
+                <%= "00" %>
+                <% finish_min = "00" %>
+              <% elsif day.finished_at.to_s(:min).to_i >= 15 && day.finished_at.to_s(:min).to_i <= 29 %>
+                <%= "15" %>
+                <% finish_min = "15" %>
+              <% elsif day.finished_at.to_s(:min).to_i >= 30 && day.finished_at.to_s(:min).to_i <= 44 %>
+                <%= "30" %>
+                <% finish_min = "30" %>
+              <% elsif day.finished_at.to_s(:min).to_i >= 45 && day.finished_at.to_s(:min).to_i <= 59 %>
+                <%= "45" %>
+                <% finish_min = "45" %>
+              <% else %>
+                <%= day.finished_at.to_s(:min) %>
+              <% end %>
+            <% end %>
+          </td>
           <td>
             <% if day.worked_on == Date.today && day.started_at.present? && day.finished_at.nil? %>
               <%= button_to "退社", user_attendances_path(@user), class: "btn btn-xs btn-primary" %>
@@ -74,8 +111,10 @@
           </td>
           <td>
             <% if day.started_at.present? && day.finished_at.present? %>
-              <%= working_times(day.started_at, day.finished_at) %>
-              <% seconds = (day.finished_at - day.started_at).to_i %>
+              <%#= working_times(day.started_at, day.finished_at) %>
+              <%= working_times(Time.parse(day.started_at.to_s(:hour) + ":" + start_min), Time.parse(day.finished_at.to_s(:hour) + ":" + finish_min)) %>
+              <%# seconds = (day.finished_at - day.started_at).to_i %>
+              <% seconds = (Time.parse(day.finished_at.to_s(:hour) + ":" + finish_min) - Time.parse(day.started_at.to_s(:hour) + ":" + start_min)).to_i %>
               <% @total_seconds = @total_seconds.to_i + seconds %>
             <% end %>
           </td>

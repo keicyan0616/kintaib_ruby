@@ -5,7 +5,8 @@ class UsersController < ApplicationController
   before_action :correct_or_admin_user,   only: [:show]
   
   def index
-    @users = User.paginate(page: params[:page])
+      #logger.debug "ここを通ったよ(001)"
+      @users = User.paginate(page: params[:page]).search(params[:search])
   end
 
   def show
@@ -71,7 +72,6 @@ class UsersController < ApplicationController
     flash[:success] = "基本情報を更新しました。"
     redirect_to @user   
   end
-
 
 private
 

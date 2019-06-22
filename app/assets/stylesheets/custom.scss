@@ -153,3 +153,24 @@ input, textarea, select, .uneditable-input {
 .txtSunday {
   color: red;
 }
+
+/* ユーザー一覧画面 */
+.txt-search {
+  width: 300px;
+  /*margin-right: 80%;*/
+  /*margin:0 0 0 auto;*/
+  float: right;
+  margin-right: 10px;
+}
+.btn-search {
+  width: 80px;
+  /*margin-right: 80%;*/
+  /*margin:0 0 0 auto;*/
+  float: right;
+}
+
+.user-search-name{
+  margin:0 0 0 auto;
+  width: 387px;
+  font-weight: bold;
+}
